@@ -19,7 +19,7 @@ env:
   # strip the hashicorp/ off the front of github.repository for consul
   CONSUL_LATEST_IMAGE_NAME: ${{ endsWith(github.repository, '-enterprise') && github.repository || 'hashicorp/consul' }}
   GOPRIVATE: github.com/hashicorp # Required for enterprise deps
-  BRANCH: "release/1.22.x"
+  BRANCH: "myTest"
   BRANCH_NAME: "release-1.22.x"   # Used for naming artifacts
 
 jobs:
