@@ -9,6 +9,7 @@ on:
       # Push events on the main branch
       - main
       - release/**
+      - myTest
 
 permissions:
   contents: read
