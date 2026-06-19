@@ -166,7 +166,7 @@ jobs:
         if: ${{ matrix.goos == 'linux' }}
         uses: hashicorp/actions-packaging-linux@v1
         with:
-          name: ${{ github.event.repository.name }}
+          name: consul
           description: "Consul is a distributed, highly available, and data center aware solution to connect and configure applications across dynamic, distributed infrastructure. "
           arch: ${{ matrix.goarch }}
           version: ${{ needs.set-product-version.outputs.product-version }}
@@ -305,6 +305,8 @@ jobs:
             docker.io/hashicorppreview/${{ env.repo }}:${{ env.minor_dev_tag }}
             docker.io/hashicorppreview/${{ env.repo }}:${{ env.minor_dev_tag }}-${{ github.sha }}
           smoke_test: .github/scripts/verify_docker.sh v${{ env.version }}
+          zip_artifact_name: consul_1.22.8-dev_linux_${{matrix.arch}}.zip
+          bin_name: consul 
 
   build-docker-ubi-dockerhub:
     name: Docker Build UBI Images
@@ -343,6 +345,8 @@ jobs:
             docker.io/hashicorppreview/${{ env.repo }}:${{ env.minor_dev_tag }}-ubi-${{ github.sha }}
           smoke_test: .github/scripts/verify_docker.sh v${{ env.version }}
           redhat_tag: quay.io/redhat-isv-containers/60f9fdbec3a80eac643abedf:${{env.version}}-ubi
+          zip_artifact_name:  consul_1.22.8-dev_linux_arm.zip
+          bin_name: consul
 
   verify-linux:
     needs:
@@ -414,7 +418,7 @@ jobs:
       - name: Download workflow artifacts
         uses: actions/download-artifact@65a9edc5881444af0b9093a5e628f2fe47ea3b2e # v4.1.7
         with:
-          name: hashicorp-${{ env.pkg_name }}
+          name: ${{ env.pkg_name }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@68827325e0b33c7199eb31dd4e31fbe9023e06e3 # v3.0.0
@@ -422,7 +426,7 @@ jobs:
           platforms: all
 
       - name: Verify ${{ matrix.arch }} debian package
-        run: ./.github/scripts/verify_artifact.sh hashicorp-${{ env.pkg_name }} v${{ env.version }}
+        run: ./.github/scripts/verify_artifact.sh ${{ env.pkg_name }} v${{ env.version }}
 
   verify-linux-packages-rpm:
     needs:
@@ -455,7 +459,7 @@ jobs:
       - name: Download workflow artifacts
         uses: actions/download-artifact@65a9edc5881444af0b9093a5e628f2fe47ea3b2e # v4.1.7
         with:
-          name: hashicorp-${{ env.pkg_name }}
+          name: ${{ env.pkg_name }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@68827325e0b33c7199eb31dd4e31fbe9023e06e3 # v3.0.0
@@ -463,4 +467,4 @@ jobs:
           platforms: all
 
       - name: Verify ${{ matrix.arch }} rpm
-        run: ./.github/scripts/verify_artifact.sh hashicorp-${{ env.pkg_name }} v${{ env.version }}
+        run: ./.github/scripts/verify_artifact.sh ${{ env.pkg_name }} v${{ env.version }}
